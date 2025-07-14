@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Price Tracker App</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1 class="logo">💰 PriceTracker</h1>
+    </header>
+
+    <main>
+      <div class="search-box">
+        <form action="/track" method="POST">
+          <input type="text" name="url" placeholder="Paste product URL here..." required>
+          <button type="submit">🔍 Track</button>
+        </form>
+        {% if title %}
+            <h2>Product: {{ title }}</h2>
+            <h3>Price: ₹{{ price }}</h3>
+        {% endif %}
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>
