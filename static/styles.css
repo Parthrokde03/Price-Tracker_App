@@ -1,53 +1,67 @@
-body {
+/* Global Reset */
+* {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
+}
+
+body {
   font-family: 'Roboto', sans-serif;
   background: url('https://images.unsplash.com/photo-1598522329646-78689960b0e4?auto=format&fit=crop&w=1400&q=80') no-repeat center center fixed;
   background-size: cover;
   color: #fff;
+  min-height: 100vh;
 }
 
+/* Container Overlay */
 .container {
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
   background: rgba(0, 0, 0, 0.65); /* dark overlay */
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  padding: 20px;
 }
 
+/* Header Logo */
 header {
   position: absolute;
-  top: 30px;
-  left: 50px;
+  top: 20px;
+  left: 20px;
 }
 
 .logo {
-  font-size: 32px;
+  font-size: 2rem;
   font-weight: bold;
   color: #ff9900;
-  margin: 0;
+}
+
+/* Search Box */
+.search-box {
+  width: 100%;
+  max-width: 500px;
 }
 
 .search-box form {
   display: flex;
+  flex-direction: row;
   align-items: center;
   background-color: #fff;
   padding: 10px 15px;
   border-radius: 40px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .search-box input {
+  flex: 1;
   border: none;
   outline: none;
   padding: 10px 15px;
   font-size: 16px;
-  width: 300px;
   border-radius: 20px;
   margin-right: 10px;
-  flex: 1;
 }
 
 .search-box button {
@@ -63,4 +77,46 @@ header {
 
 .search-box button:hover {
   background-color: #e88c00;
+}
+
+/* Responsive Text */
+.search-box h2,
+.search-box h3 {
+  text-align: center;
+  margin-top: 20px;
+  color: #ffffff;
+  word-wrap: break-word;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 600px) {
+  .logo {
+    font-size: 1.5rem;
+  }
+
+  header {
+    top: 15px;
+    left: 15px;
+  }
+
+  .search-box form {
+    flex-direction: column;
+    padding: 15px;
+  }
+
+  .search-box input {
+    width: 100%;
+    margin: 0 0 10px 0;
+    font-size: 14px;
+  }
+
+  .search-box button {
+    width: 100%;
+    padding: 10px;
+  }
+
+  .search-box h2,
+  .search-box h3 {
+    font-size: 1rem;
+  }
 }
