@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request
 import requests
 from bs4 import BeautifulSoup
-import os
 
 app = Flask(__name__)
 
@@ -9,24 +8,35 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
+
 @app.route('/track', methods=['POST'])
 def track():
-    url = request.form['url']
+    product_url = request.form['url']
 
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36'
+    scraper_url = 'http://api.scraperapi.com'
+    api_key = '4131f2bc55e8754180a90cfb89d1d309'
+
+    params = {
+        'api_key': api_key,
+        'url': product_url,
+        'render': 'true'
     }
-    
-    response = requests.get(url, headers=headers)
-    soup = BeautifulSoup(response.content, 'lxml')
-    print(soup.prettify())
 
-    image_url = soup.find('img',{'class':'DByuf4 IZexXJ jLEJ7H'})
-    title = soup.find('span', {'class': 'VU-ZEz'})
-    price = soup.find('div', {'class': 'Nx9bqj CxhGGd'})
-    
-    return render_template('result.html',image_url = image_url["src"] if image_url else "Not found", title=title.text.strip() if title else "Not found", price=price.text if price else "Not found")
+    response = requests.get(scraper_url, params=params)
+    soup = BeautifulSoup(response.content, 'html.parser')  # Not lxml — use html.parser for meta tags
+
+    # Fetch from meta tags
+    image = soup.find('meta', {'property': 'og:image'})
+    title = soup.find('meta', {'property': 'og:title'})
+    price = soup.find('meta', {'property': 'product:price:amount'})
+
+    return render_template(
+        'result.html',
+        title=title['content'] if title else "Not found",
+        price=f"₹{price['content']}" if price else "Not found",
+        image_url=image['content'] if image else "https://via.placeholder.com/300?text=Image+Not+Found"
+    )
+
 
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host='0.0.0.0', port=port)
+    app.run(debug=True)
