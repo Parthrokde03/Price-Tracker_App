@@ -66,7 +66,9 @@ def track():
         image_url = "https://via.placeholder.com/300?text=No+Image"
 
     # Clean price and store to DB
-    price_value = float(re.sub(r'[^\d.]', '', price_text)) if price_text != "Not found" else 0.0
+    cleaned_price = re.sub(r'[^\d.]', '', price_text)
+    price_value = float(cleaned_price) if cleaned_price else 0.0
+
     if price_value > 0:
         record = PriceHistory(url=product_url, title=title_text, price=price_value)
         db.session.add(record)
