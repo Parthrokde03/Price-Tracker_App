@@ -1,4 +1,3 @@
-<!-- templates/result.html -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,7 +7,7 @@
             background-color: #f2f2f2;
             font-family: Arial, sans-serif;
             text-align: center;
-            padding-top: 80px;
+            padding-top: 50px;
         }
         .card {
             display: inline-block;
@@ -16,6 +15,7 @@
             background-color: #fff;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
             border-radius: 10px;
+            margin-bottom: 40px;
         }
         h1 {
             color: #333;
@@ -24,14 +24,64 @@
             font-size: 24px;
             color: #ff6600;
         }
+        canvas {
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
     <div class="card">
         <img src="{{ image_url }}" alt="Product Image" style="width:300px; border-radius: 10px;">
         <h1>{{ title }}</h1>
-        <p class="price">Price: {{ price }}</p>
-        <a href="/" style="text-decoration:none;color:blue;">Search another</a>
+        {% if "₹" in price %}
+        <p class="price">Current Price: {{ price }}</p>
+        {% else %}
+        <p class="price">Current Price: ₹{{ price }}</p>
+        {% endif %}
     </div>
+
+    {% if history %}
+    <div class="card" style="width: 600px;">
+        <h2>📈 Price History (Last {{ history | length }} Records)</h2>
+        <canvas id="priceChart" width="500" height="250"></canvas>
+
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            const ctx = document.getElementById('priceChart').getContext('2d');
+            const chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: {{ history | map(attribute='date') | list | tojson }},
+                    datasets: [{
+                        label: 'Price (₹)',
+                        data: {{ history | map(attribute='price') | list | tojson }},
+                        borderColor: 'orange',
+                        backgroundColor: 'rgba(255,165,0,0.1)',
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            ticks: {
+                                callback: function(val, index) {
+                                    const label = this.getLabelForValue(val);
+                                    return label.split("T")[0]; // Only show date
+                                }
+                            }
+                        },
+                        y: {
+                            beginAtZero: false
+                        }
+                    }
+                }
+            });
+        </script>
+    </div>
+    {% endif %}
+
+    <br>
+    <a href="/" style="text-decoration:none;color:blue;">🔄 Track Another Product</a>
 </body>
 </html>
