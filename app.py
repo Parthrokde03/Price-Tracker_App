@@ -51,7 +51,7 @@ def track():
         image_url = image['content'] if image else "https://via.placeholder.com/300?text=Image+Not+Found"
 
     # Amazon
-    elif 'amazon' in product_url:
+    elif 'amazon.in'or 'amzn.in' in product_url:
         image = soup.find('img', {'id': 'landingImage'})
         title = soup.find('span', {'id': 'productTitle'})
         price = soup.find('span', {'class': 'a-price-whole'})
